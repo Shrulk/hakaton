@@ -76,13 +76,3 @@ def angles(lines, type='rad'):
             elif type == "grad":
                 res[j][i] = np.mod(180. - res[i][j], 180)
     return res
-
-
-# line1 = Line(1, 2, 5, 6)
-# line2 = Line(10, 1, 5, 6)
-# line3 = Line(5, 8, 2, 2)
-# line4 = Line(1, 1, 9, 2)
-# line5 = Line(-10, 6, 4, 2)
-# print(angles([line1, line2, line3, line4, line5], "rad"))
-# print(line.angle(line2))
-# p2 = Point2D(4, 2)
