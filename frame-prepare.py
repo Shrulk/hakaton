@@ -18,7 +18,8 @@ while (True):
     # И пропускаем кадры после 4:41, т.к. там работы уже закончены
     if (frameNr > 25 * 100 and frameNr < 25 * (2*60 + 36)) or (frameNr > 25 * (4*60 +41)):
         frameNr = frameNr + frame_shift
-        if frameNr > 8000: break
+        break
+    if frameNr > 8000: break
 
     capture.set(cv2.CAP_PROP_POS_FRAMES, frameNr)
     success, frame = capture.read()
