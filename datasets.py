@@ -2,6 +2,7 @@ import torch
 import cv2
 import numpy as np
 import os
+import ast
 import glob as glob
 
 from xml.etree import ElementTree as et
@@ -20,7 +21,7 @@ class SlingDataset(Dataset):
         
         # get all the image paths in sorted order
         self.image_paths = glob.glob(f"{self.dir_path}/*.png")
-        self.all_images = [image_path.split('/')[-1] for image_path in self.image_paths]
+        self.all_images = [image_path.split('/')[-1].split('\\')[-1] for image_path in self.image_paths]
         self.all_images = sorted(self.all_images)
 
     def __getitem__(self, idx):
@@ -50,19 +51,28 @@ class SlingDataset(Dataset):
         
         # TODO: we need 4 boxes of slings, not 1. So, rewrite block with returning data according to xml and model
         # box coordinates for xml files are extracted and corrected for image size given
-        for member in root.findall('object'):
+        for member in root.findall('shapes'):
             # map the current object name to `classes` list to get...
             # ... the label index and append to `labels` list
-            labels.append(self.classes.index(member.find('name').text))
-            
+            lbl = member.find('label').text
+            # if lbl != 'sling': continue # work only with slings ?
+            if lbl == 'hook': continue # skip hooks
+            labels.append(self.classes.index(lbl))
+
+            x_s = []
+            y_s = []
+            for point in member.findall('points'):
+                x, y = ast.literal_eval(member.findall('points')[0].text)
+                x_s.append(x)
+                y_s.append(y)
             # xmin = left corner x-coordinates
-            xmin = int(member.find('bndbox').find('xmin').text)
+            xmin = min(x_s)
             # xmax = right corner x-coordinates
-            xmax = int(member.find('bndbox').find('xmax').text)
+            xmax = max(x_s)
             # ymin = left corner y-coordinates
-            ymin = int(member.find('bndbox').find('ymin').text)
+            ymin = min(y_s)
             # ymax = right corner y-coordinates
-            ymax = int(member.find('bndbox').find('ymax').text)
+            ymax = max(y_s)
             
             # resize the bounding boxes according to the...
             # ... desired `width`, `height`

@@ -13,13 +13,15 @@ DEVICE = torch.device('cuda') if torch.cuda.is_available() else torch.device('cp
 # training images and XML files directory
 TRAIN_DIR = 'datasets/train'
 # validation images and XML files directory
-VALID_DIR = 'datasets/test'
+VALID_DIR = 'datasets/validation'
+# test images and XML files directory
+TEST_DIR = 'datasets/test'
 
 # classes: 0 index is reserved for background
 CLASSES = [
-    'background', 'sling', 'box', 'hook'
+    'background', 'sling', 'box' #, 'hook'
 ]
-NUM_CLASSES = 4
+NUM_CLASSES = 3 # 4
 
 # whether to visualize images after crearing the data loaders
 VISUALIZE_TRANSFORMED_IMAGES = False
