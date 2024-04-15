@@ -4,6 +4,7 @@ import numpy as np
 import os
 import ast
 import glob as glob
+import matplotlib.pyplot as plt
 
 from xml.etree import ElementTree as et
 from config import CLASSES, RESIZE_TO, RESIZE_TO_HEIGHT, RESIZE_TO_WIDTH, TRAIN_DIR, VALID_DIR, BATCH_SIZE
@@ -62,7 +63,7 @@ class SlingDataset(Dataset):
             x_s = []
             y_s = []
             for point in member.findall('points'):
-                x, y = ast.literal_eval(member.findall('points')[0].text)
+                x, y = ast.literal_eval(point.text)
                 x_s.append(x)
                 y_s.append(y)
             # xmin = left corner x-coordinates
@@ -147,7 +148,7 @@ if __name__ == '__main__':
     # function to visualize a single sample
     def visualize_sample(image, target):
         box = target['boxes'][0]
-        label = CLASSES[target['labels']]
+        label = CLASSES[target['labels'][0]]
         cv2.rectangle(
             image, 
             (int(box[0]), int(box[1])), (int(box[2]), int(box[3])),
@@ -157,10 +158,12 @@ if __name__ == '__main__':
             image, label, (int(box[0]), int(box[1]-5)), 
             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2
         )
-        cv2.imshow('Image', image)
-        cv2.waitKey(0)
-        
-    NUM_SAMPLES_TO_VISUALIZE = 5
-    for i in range(NUM_SAMPLES_TO_VISUALIZE):
+        plt.imshow(image)
+        plt.show()
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
+
+    NUM_SAMPLES_TO_VISUALIZE = 1
+    for i in range(150, 150+NUM_SAMPLES_TO_VISUALIZE):
         image, target = dataset[i]
         visualize_sample(image, target)
