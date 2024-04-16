@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from albumentations.pytorch import ToTensorV2
-from config import DEVICE, CLASSES as classes
+from nn.config import DEVICE
 
 
 # this class keeps track of the training and validation loss values...

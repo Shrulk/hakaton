@@ -7,9 +7,8 @@ import glob as glob
 import matplotlib.pyplot as plt
 
 from xml.etree import ElementTree as et
-from config import (
+from nn.config import (
     CLASSES,
-    RESIZE_TO,
     RESIZE_TO_HEIGHT,
     RESIZE_TO_WIDTH,
     TRAIN_DIR,

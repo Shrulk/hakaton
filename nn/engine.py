@@ -1,10 +1,10 @@
-from config import DEVICE, NUM_CLASSES, NUM_EPOCHS, OUT_DIR
-from config import VISUALIZE_TRANSFORMED_IMAGES
-from config import SAVE_PLOTS_EPOCH, SAVE_MODEL_EPOCH
+from nn.config import DEVICE, NUM_CLASSES, NUM_EPOCHS, OUT_DIR
+from nn.config import VISUALIZE_TRANSFORMED_IMAGES
+from nn.config import SAVE_PLOTS_EPOCH, SAVE_MODEL_EPOCH
 from model import create_model
 from utils import Averager
 from tqdm.auto import tqdm
-from datasets import train_loader, valid_loader
+from data_works.datasets import train_loader, valid_loader
 
 import torch
 import matplotlib.pyplot as plt
