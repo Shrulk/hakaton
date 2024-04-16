@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a9ff9b1b-c6da-419c-bb8d-58fbc33bf0f8" name="Changes" comment="" />
+    <list default="true" id="a9ff9b1b-c6da-419c-bb8d-58fbc33bf0f8" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/detection_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/detection_1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/detection_2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/detection_2.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/lines.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/lines.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/model.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/model.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/plot_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/plot_1.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/plot_2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/plot_2.jpg" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
