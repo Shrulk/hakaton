@@ -4,36 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a9ff9b1b-c6da-419c-bb8d-58fbc33bf0f8" name="Changes" comment="">
+    <list default="true" id="1859a07c-488c-4bed-a643-8900bc2aaa92" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/detection_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/detection_1.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/detection_2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/detection_2.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/lines.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/lines.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/model.png" beforeDir="false" afterPath="$PROJECT_DIR$/images/model.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/plot_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/plot_1.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/plot_2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/images/plot_2.jpg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="restructuring" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 6
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;mrpepperbest&quot;
+  }
 }</component>
-  <component name="ProjectId" id="2fC6o0dbvOVxSBwd1YkOfxg4Tmz" />
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Shrulk/hakaton.git&quot;,
+    &quot;accountId&quot;: &quot;2a2ed5e0-5516-49f3-9018-43f369eca9d3&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2fHdnxObkxPJ037fsT7ef2FNY6d" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -41,22 +43,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "restructuring",
-    "last_opened_file_path": "W:/Coding/Hackathon/images"
+    "git-widget-placeholder": "main"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="W:\Coding\Hackathon\images" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="W:\Coding\Hackathon\images" />
-      <recent name="W:\Coding\Hackathon" />
-      <recent name="W:\Coding\Hackathon\nn" />
-      <recent name="W:\Coding\Hackathon\data_works" />
-      <recent name="W:\Coding\Hackathon\calculus" />
-    </key>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -67,11 +56,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a9ff9b1b-c6da-419c-bb8d-58fbc33bf0f8" name="Changes" comment="" />
-      <created>1713292884154</created>
+      <changelist id="1859a07c-488c-4bed-a643-8900bc2aaa92" name="Changes" comment="" />
+      <created>1713462114402</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1713292884154</updated>
+      <updated>1713462114402</updated>
     </task>
     <servers />
   </component>
