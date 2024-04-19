@@ -44,10 +44,11 @@ def get_train_transform():
         [
             # A.Flip(0.5),
             # A.RandomRotate90(0.5),
+            A.RGBShift(r_shift_limit=15, g_shift_limit=15, b_shift_limit=15, p=0.5),
             A.RandomBrightnessContrast(p=0.5),
             # A.RandomRain(blur_value=1, p=0.2),
             # A.MotionBlur(p=0.2),
-            A.MedianBlur(blur_limit=3, p=0.1),
+            # A.MedianBlur(blur_limit=3, p=0.1),
             # A.Blur(blur_limit=3, p=0.1),
             ToTensorV2(p=1.0),
         ],
