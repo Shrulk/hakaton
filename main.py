@@ -100,17 +100,6 @@ def add_text_to_image(
     return image_rgb
 
 
-CLASSES = ["background", "sling", "box"]
-detection_threshold = 0.9
-
-# выбор процессора
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-# загрузка обученной модели с весами
-model = create_model(num_classes=3).to(device)
-model.load_state_dict(torch.load("outputs/model_150_END.pth", map_location=device))
-model.eval()
-
-
 def formate_elem(x):
     x = str(round(x))
     if "-" in x:
@@ -142,6 +131,17 @@ def gen_table(angles):
         .replace(" - ", " # ", 1)
         + "|"
     )
+
+
+CLASSES = ["background", "sling", "box"]
+detection_threshold = 0.9
+
+# выбор процессора
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+# загрузка обученной модели с весами
+model = create_model(num_classes=3).to(device)
+model.load_state_dict(torch.load("outputs/model_150_END.pth", map_location=device))
+model.eval()
 
 
 def process_video():
@@ -215,7 +215,7 @@ def process_video():
                             (int(box[0]), int(box[3] - 5)),
                             cv2.FONT_HERSHEY_DUPLEX,
                             1,
-                            (255, 0, 255),
+                            (0, 255, 0),
                             1,
                             lineType=cv2.LINE_AA,
                         )
