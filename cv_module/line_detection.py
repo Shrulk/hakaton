@@ -76,7 +76,7 @@ def diagonal_max_mean_definition(
     diagonal_distribution_left, diagonal_distribution_right = (
         diagonal_elements_extraction(image=box, gap=gap)
     )
-    if np.mean(diagonal_distribution_left) >= np.mean(diagonal_distribution_right):
+    if np.median(diagonal_distribution_left) >= np.median(diagonal_distribution_right):
         return True  # левый верхний угол
     else:
         return False  # правый верхний угол
