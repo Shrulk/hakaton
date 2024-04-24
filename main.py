@@ -13,7 +13,7 @@ from cv_module.line_detection import sling_diagonal_definition_from_file
 
 
 CLASSES = ["background", "sling", "box"]
-detection_threshold = 0.8
+detection_threshold = 0.9
 
 # выбор процессора
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
@@ -23,7 +23,7 @@ model.load_state_dict(torch.load("outputs/model_150_END.pth", map_location=devic
 model.eval()
 
 
-def table(angles):
+def gen_table(angles):
     return np.array2string(angles, separator="\t", precision=2)[1:-1].replace(
         "\n ", "\n"
     )
@@ -52,6 +52,8 @@ def process_video():
     i = 0
     outputs = None
     main_diag_flag = None
+    slings = []
+    table = ""
     try:
         while cap.isOpened():
             i += 1
@@ -60,7 +62,9 @@ def process_video():
                 break
 
             orig_image = image.copy()
-            if i % (fps // 1) == 0:
+            need_calcs = i % (fps // 1) == 0
+            if need_calcs:
+                slings = []
                 # BGR to RGB
                 image = cv2.cvtColor(orig_image, cv2.COLOR_BGR2RGB).astype(np.float32)
                 # нормируем значение пикселей между 0 и 1
@@ -76,7 +80,6 @@ def process_video():
             if outputs is not None and len(outputs[0]["boxes"]) != 0:
                 boxes = outputs[0]["boxes"].data.numpy()
                 scores = outputs[0]["scores"].data.numpy()
-
                 # фильтруем результат по detection_threshold
                 boxes = boxes[scores >= detection_threshold].astype(np.int32)
                 draw_boxes = boxes.copy()
@@ -101,7 +104,7 @@ def process_video():
                             1,
                             lineType=cv2.LINE_AA,
                         )
-                    elif pred_classes[j] == "sling":
+                    elif pred_classes[j] == "sling" and need_calcs:
                         main_diag_flag = sling_diagonal_definition_from_file(
                             orig_image,
                             [int(box[0]), int(box[1]), int(box[2]), int(box[3])],
@@ -112,9 +115,26 @@ def process_video():
                         else:
                             p1 = (int(box[2]), int(box[1]))
                             p2 = (int(box[0]), int(box[3]))
-
-                        cv2.line(orig_image, p1, p2, (0, 255, 0), 3)
-
+                        slings.append(Line(p1[0], p1[1], p2[0], p2[1]))
+                        table = gen_table(angles(slings))
+                    for sling in slings:
+                        cv2.line(
+                            orig_image,
+                            (sling.p1.x, sling.p1.y),
+                            (sling.p2.x, sling.p2.y),
+                            (0, 255, 0),
+                            3,
+                        )
+                    cv2.putText(
+                        orig_image,
+                        table,
+                        (500, 500),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        (255, 0, 255),
+                        1,
+                        lineType=cv2.LINE_AA,
+                    )
             # Рисуем рамку
             out.write(orig_image)
     except:
