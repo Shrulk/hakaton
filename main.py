@@ -24,11 +24,9 @@ model.eval()
 
 
 def table(angles):
-    pass
-
-
-def get_sling_ends(inp):
-    return inp[0], inp[1]
+    return np.array2string(angles, separator="\t", precision=2)[1:-1].replace(
+        "\n ", "\n"
+    )
 
 
 def process_video():
@@ -109,21 +107,13 @@ def process_video():
                             [int(box[0]), int(box[1]), int(box[2]), int(box[3])],
                         )
                         if main_diag_flag:
-                            cv2.line(
-                                orig_image,
-                                (int(box[0]), int(box[1])),
-                                (int(box[2]), int(box[3])),
-                                (0, 255, 0),
-                                3,
-                            )
+                            p1 = (int(box[0]), int(box[1]))
+                            p2 = (int(box[2]), int(box[3]))
                         else:
-                            cv2.line(
-                                orig_image,
-                                (int(box[2]), int(box[1])),
-                                (int(box[0]), int(box[3])),
-                                (0, 255, 0),
-                                3,
-                            )
+                            p1 = (int(box[2]), int(box[1]))
+                            p2 = (int(box[0]), int(box[3]))
+
+                        cv2.line(orig_image, p1, p2, (0, 255, 0), 3)
 
             # Рисуем рамку
             out.write(orig_image)
