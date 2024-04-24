@@ -1,6 +1,7 @@
 import typing
 import numpy as np
 import cv2 as cv
+from cv_module import cut_frames
 
 
 def is_in_image(index: typing.Union[np.ndarray, list, tuple],
@@ -42,25 +43,25 @@ def diagonal_elements_extraction(image: typing.Union[np.ndarray, list], gap: int
     return diagonal_distribution_left, diagonal_distribution_right
 
 
-def diagonal_max_mean_definition(box: typing.Union[np.ndarray, list], gap: int, *args, **kwargs) -> str:
+def diagonal_max_mean_definition(box: typing.Union[np.ndarray, list], gap: int, *args, **kwargs) -> bool:
     diagonal_distribution_left, diagonal_distribution_right = diagonal_elements_extraction(image=box,
                                                                                            gap=gap)
     if np.mean(diagonal_distribution_left) >= np.mean(diagonal_distribution_right):
-        return 'left'
+        return True  # левый верхний угол
     else:
-        return 'right'
+        return False  # правый верхний угол
 
 
-def harris_measure_calculation(image: typing.Union[np.ndarray, list], k: float, *args, **kwargs) -> np.ndarray:
-    image_x_derivative = cv.Sobel(image, cv.CV_64F, 1, 0)
-    image_y_derivative = cv.Sobel(image, cv.CV_64F, 0, 1)
-    dx_sqr = image_x_derivative**2
-    dy_sqr = image_y_derivative**2
-    dydx = image_x_derivative*image_y_derivative
-    determinant = dx_sqr*dy_sqr - dydx**2
-    trace = dx_sqr+dy_sqr
-    measure = determinant-k*trace
-    return measure
+# def harris_measure_calculation(image: typing.Union[np.ndarray, list], k: float, *args, **kwargs) -> np.ndarray:
+#     image_x_derivative = cv.Sobel(image, cv.CV_64F, 1, 0)
+#     image_y_derivative = cv.Sobel(image, cv.CV_64F, 0, 1)
+#     dx_sqr = image_x_derivative**2
+#     dy_sqr = image_y_derivative**2
+#     dydx = image_x_derivative*image_y_derivative
+#     determinant = dx_sqr*dy_sqr - dydx**2
+#     trace = dx_sqr+dy_sqr
+#     measure = determinant-k*trace
+#     return measure
 
 
 def sling_diagonal_definition(image: typing.Union[np.ndarray, list], *args, **kwargs):
@@ -71,14 +72,27 @@ def sling_diagonal_definition(image: typing.Union[np.ndarray, list], *args, **kw
     return angle
 
 
-def sling_diagonal_definition_harris(image: typing.Union[np.ndarray, list], *args, **kwargs):
-    harris_matrix = harris_measure_calculation(image=image, *args, **kwargs)
-    diagonal_distribution_left, diagonal_distribution_right = diagonal_elements_extraction(image=harris_matrix,
-                                                                                           *args,
-                                                                                           **kwargs)
-    left_sum = len(np.where(diagonal_distribution_left < [0])[0])
-    right_sum = len(np.where(diagonal_distribution_right < [0])[0])
-    if left_sum >= right_sum:
-        return 'left'
-    else:
-        return 'right'
+# def sling_diagonal_definition_harris(image: typing.Union[np.ndarray, list], *args, **kwargs):
+#     harris_matrix = harris_measure_calculation(image=image, *args, **kwargs)
+#     diagonal_distribution_left, diagonal_distribution_right = diagonal_elements_extraction(image=harris_matrix,
+#                                                                                            *args,
+#                                                                                            **kwargs)
+#     left_sum = len(np.where(diagonal_distribution_left < [0])[0])
+#     right_sum = len(np.where(diagonal_distribution_right < [0])[0])
+#     if left_sum >= right_sum:
+#         return 'left'
+#     else:
+#         return 'right'
+
+
+def sling_diagonal_definition_from_file(image_source: str,
+                                        box_coordinates: list,
+                                        gap: int = 2,
+                                        *args,
+                                        **kwargs) -> bool:
+    image = cut_frames.cut_image(image_source=image_source,
+                                 box_coords=box_coordinates)
+    angle = sling_diagonal_definition(image=image,
+                                      gap=gap)
+    return angle
+
