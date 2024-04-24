@@ -2,12 +2,14 @@ import numpy as np
 import cv2
 import torch
 import glob as glob
-import os
-import json
+
+# import os
+# import json
 from our_nn.model import create_model
 import matplotlib.pyplot as plt
 import time
 from calculus.angles import Line, angles
+from cv_module.line_detection import sling_diagonal_definition_from_file
 
 
 CLASSES = ["background", "sling", "box"]
@@ -20,9 +22,9 @@ model = create_model(num_classes=3).to(device)
 model.load_state_dict(torch.load("outputs/model_150_END.pth", map_location=device))
 model.eval()
 
+
 def table(angles):
     pass
-
 
 
 def get_sling_ends(inp):
@@ -51,6 +53,7 @@ def process_video():
     out.open(output_file_name, fourcc, fps, (width, height), True)
     i = 0
     outputs = None
+    main_diag_flag = None
     try:
         while cap.isOpened():
             i += 1
@@ -59,7 +62,7 @@ def process_video():
                 break
 
             orig_image = image.copy()
-            if i % (fps // 3) == 0:
+            if i % (fps // 1) == 0:
                 # BGR to RGB
                 image = cv2.cvtColor(orig_image, cv2.COLOR_BGR2RGB).astype(np.float32)
                 # нормируем значение пикселей между 0 и 1
@@ -101,13 +104,27 @@ def process_video():
                             lineType=cv2.LINE_AA,
                         )
                     elif pred_classes[j] == "sling":
-                        p1, p2 = get_sling_ends(
-                            [  # [(x1,y1), (x2,y2)]
+                        main_diag_flag = sling_diagonal_definition_from_file(
+                            orig_image,
+                            [int(box[0]), int(box[1]), int(box[2]), int(box[3])],
+                        )
+                        if main_diag_flag:
+                            cv2.line(
+                                orig_image,
                                 (int(box[0]), int(box[1])),
                                 (int(box[2]), int(box[3])),
-                            ]
-                        )
-                        cv2.line(orig_image, p1, p2, (0, 255, 0), 3)
+                                (0, 255, 0),
+                                3,
+                            )
+                        else:
+                            cv2.line(
+                                orig_image,
+                                (int(box[2]), int(box[1])),
+                                (int(box[0]), int(box[3])),
+                                (0, 255, 0),
+                                3,
+                            )
+
             # Рисуем рамку
             out.write(orig_image)
     except:

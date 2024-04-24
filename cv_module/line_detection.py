@@ -4,15 +4,20 @@ import cv2 as cv
 from cv_module import cut_frames
 
 
-def is_in_image(index: typing.Union[np.ndarray, list, tuple],
-                shape: typing.Union[np.ndarray, list, tuple],
-                *args, **kwargs):
+def is_in_image(
+    index: typing.Union[np.ndarray, list, tuple],
+    shape: typing.Union[np.ndarray, list, tuple],
+    *args,
+    **kwargs
+):
     x = np.max([0, np.min([index[0], shape[0] - 1])])
     y = np.max([0, np.min([index[1], shape[1] - 1])])
     return x, y
 
 
-def diagonal_elements_extraction(image: typing.Union[np.ndarray, list], gap: int, *args, **kwargs) -> typing.Tuple[list, list]:
+def diagonal_elements_extraction(
+    image: typing.Union[np.ndarray, list], gap: int, *args, **kwargs
+) -> typing.Tuple[list, list]:
     diagonal_distribution_left = []
     diagonal_distribution_right = []
     image_shape = np.shape(image)
@@ -26,26 +31,51 @@ def diagonal_elements_extraction(image: typing.Union[np.ndarray, list], gap: int
     indices_right = np.array(list(zip(i_s_right, j_s_right)))
 
     for number in range(gap):
-        indices_left = np.concatenate((np.copy(indices_left),
-                                       np.copy(indices_left) + [0, number],
-                                       np.copy(indices_left) + [number, 0],
-                                       np.copy(indices_left) - [0, number],
-                                       np.copy(indices_left) - [number, 0]))
-        indices_right = np.concatenate((np.copy(indices_right),
-                                        np.copy(indices_right) + [0, number],
-                                        np.copy(indices_right) + [number, 0],
-                                        np.copy(indices_right) - [0, number],
-                                        np.copy(indices_right) - [number, 0]))
+        indices_left = np.concatenate(
+            (
+                np.copy(indices_left),
+                np.copy(indices_left) + [0, number],
+                np.copy(indices_left) + [number, 0],
+                np.copy(indices_left) - [0, number],
+                np.copy(indices_left) - [number, 0],
+            )
+        )
+        indices_right = np.concatenate(
+            (
+                np.copy(indices_right),
+                np.copy(indices_right) + [0, number],
+                np.copy(indices_right) + [number, 0],
+                np.copy(indices_right) - [0, number],
+                np.copy(indices_right) - [number, 0],
+            )
+        )
     indices_left = set(map(lambda x: tuple(x), indices_left))
     indices_right = set(map(lambda x: tuple(x), indices_right))
-    list(map(lambda x: diagonal_distribution_left.append(image[is_in_image(x, image_shape)]), indices_left))
-    list(map(lambda x: diagonal_distribution_right.append(image[is_in_image(x, image_shape)]), indices_right))
+    list(
+        map(
+            lambda x: diagonal_distribution_left.append(
+                image[is_in_image(x, image_shape)]
+            ),
+            indices_left,
+        )
+    )
+    list(
+        map(
+            lambda x: diagonal_distribution_right.append(
+                image[is_in_image(x, image_shape)]
+            ),
+            indices_right,
+        )
+    )
     return diagonal_distribution_left, diagonal_distribution_right
 
 
-def diagonal_max_mean_definition(box: typing.Union[np.ndarray, list], gap: int, *args, **kwargs) -> bool:
-    diagonal_distribution_left, diagonal_distribution_right = diagonal_elements_extraction(image=box,
-                                                                                           gap=gap)
+def diagonal_max_mean_definition(
+    box: typing.Union[np.ndarray, list], gap: int, *args, **kwargs
+) -> bool:
+    diagonal_distribution_left, diagonal_distribution_right = (
+        diagonal_elements_extraction(image=box, gap=gap)
+    )
     if np.mean(diagonal_distribution_left) >= np.mean(diagonal_distribution_right):
         return True  # левый верхний угол
     else:
@@ -67,7 +97,7 @@ def diagonal_max_mean_definition(box: typing.Union[np.ndarray, list], gap: int, 
 def sling_diagonal_definition(image: typing.Union[np.ndarray, list], *args, **kwargs):
     image_x_derivative = cv.Scharr(image, cv.CV_64F, 1, 0)
     image_y_derivative = cv.Scharr(image, cv.CV_64F, 0, 1)
-    image_edges = np.sqrt(image_x_derivative ** 2 + image_y_derivative ** 2)
+    image_edges = np.sqrt(image_x_derivative**2 + image_y_derivative**2)
     angle = diagonal_max_mean_definition(image_edges, *args, **kwargs)
     return angle
 
@@ -85,14 +115,9 @@ def sling_diagonal_definition(image: typing.Union[np.ndarray, list], *args, **kw
 #         return 'right'
 
 
-def sling_diagonal_definition_from_file(image_source: str,
-                                        box_coordinates: list,
-                                        gap: int = 2,
-                                        *args,
-                                        **kwargs) -> bool:
-    image = cut_frames.cut_image(image_source=image_source,
-                                 box_coords=box_coordinates)
-    angle = sling_diagonal_definition(image=image,
-                                      gap=gap)
+def sling_diagonal_definition_from_file(
+    image: np.ndarray, box_coordinates: list, gap: int = 2, *args, **kwargs
+) -> bool:
+    image = cut_frames.cut_image(image=image, box_coords=box_coordinates)
+    angle = sling_diagonal_definition(image=image, gap=gap)
     return angle
-
