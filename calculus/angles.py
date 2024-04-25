@@ -33,7 +33,7 @@ class Line:
             elif type == "grad":
                 return np.rad2deg(np.pi)
 
-        rad = np.arctan((k2 - k1) / znam)
+        rad = np.arctan((k2 - k1) / znam) + np.pi / 2
         if type == "rad":
             return rad
         elif type == "grad":
@@ -72,11 +72,26 @@ def angles(lines, type="rad"):
                 continue
             line1 = lines[i]
             line2 = lines[j]
-            res[i][j] = line1.angle(line2, type)
+            ang = line1.angle(line2, type)
+
+            if ang < ((np.pi / 2) if type == "rad" else 90):
+                res[i][j] = (
+                    (np.mod(ang + 2 * np.pi, 2 * np.pi))
+                    if type == "rad"
+                    else np.mod(ang + 360, 2 * 180)
+                )  # ang
+            else:
+                res[i][j] = (
+                    (np.mod((np.pi - ang) + 2 * np.pi, 2 * np.pi))
+                    if type == "rad"
+                    else np.mod((180 - ang) + 360, 2 * 180)
+                )
+                # res[i][j] = np.pi - ang
             if type == "rad":
-                res[j][i] = np.mod(2 * np.pi - res[i][j], 2 * np.pi)
+                res[j][i] = np.pi - res[i][j]
             elif type == "grad":
-                res[j][i] = np.mod(180.0 - res[i][j], 180)
+                res[j][i] = 180.0 - res[i][j]
+    # print(res)
     return res
 
 
