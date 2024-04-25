@@ -80,7 +80,7 @@ def diagonal_max_mean_definition(
 
 
 def sling_diagonal_definition(image: typing.Union[np.ndarray, list], *args, **kwargs):
-    temp_image = image
+    temp_image = cv.GaussianBlur(image, (5,5), 5)
     image_x_derivative = cv.Scharr(temp_image, cv.CV_64F, 1, 0)
     image_y_derivative = cv.Scharr(temp_image, cv.CV_64F, 0, 1)
     image_edges = np.sqrt(image_x_derivative**2 + image_y_derivative**2)
