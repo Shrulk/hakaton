@@ -80,10 +80,8 @@ def diagonal_max_mean_definition(
 
 
 def sling_diagonal_definition(image: typing.Union[np.ndarray, list], *args, **kwargs):
-    temp_image = cv.GaussianBlur(image, (5,5), 5)
-    image_x_derivative = cv.Scharr(temp_image, cv.CV_64F, 1, 0)
-    image_y_derivative = cv.Scharr(temp_image, cv.CV_64F, 0, 1)
-    image_edges = np.sqrt(image_x_derivative**2 + image_y_derivative**2)
+    temp_image = cv.bilateralFilter(image, 25, 15, 50)
+    image_edges = cv.Canny(temp_image, 240, 250, None, 3)
     angle = diagonal_max_mean_definition(image_edges, *args, **kwargs)
     return angle
 
@@ -102,7 +100,7 @@ def sling_diagonal_definition(image: typing.Union[np.ndarray, list], *args, **kw
 
 
 def sling_diagonal_definition_from_file(
-    image: np.ndarray, box_coordinates: list, gap: int = 3, *args, **kwargs
+    image: np.ndarray, box_coordinates: list, gap: int = 5, *args, **kwargs
 ) -> bool:
     image = cut_frames.cut_image(image=image, box_coords=box_coordinates)
     image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
