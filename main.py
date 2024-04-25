@@ -177,7 +177,7 @@ def process_video():
                 break
 
             orig_image = image.copy()
-            need_calcs = i % (fps // 1) == 0
+            need_calcs = i % (fps // 2) == 0
             if need_calcs:
                 slings = []
                 # BGR to RGB
@@ -188,10 +188,10 @@ def process_video():
                 image = torch.tensor(image, dtype=torch.float).cuda()
                 # повышение размерности для батча
                 image = torch.unsqueeze(image, 0)
+                # Выполняем распознавание
                 with torch.no_grad():
                     outputs = model(image)
                 outputs = [{k: v.to("cpu") for k, v in t.items()} for t in outputs]
-                # Выполняем распознавание
             if outputs is not None and len(outputs[0]["boxes"]) != 0:
                 boxes = outputs[0]["boxes"].data.numpy()
                 scores = outputs[0]["scores"].data.numpy()
@@ -215,7 +215,7 @@ def process_video():
                             (int(box[0]), int(box[3] - 5)),
                             cv2.FONT_HERSHEY_DUPLEX,
                             1,
-                            (0, 255, 0),
+                            (0, 0, 255),
                             1,
                             lineType=cv2.LINE_AA,
                         )
@@ -231,14 +231,29 @@ def process_video():
                             p1 = (int(box[2]), int(box[1]))
                             p2 = (int(box[0]), int(box[3]))
                         slings.append(Line(p1[0], p1[1], p2[0], p2[1]))
-                        table = gen_table(angles(slings, "grad"))
-                    for sling in slings:
+                        table = gen_table(angles(slings[:4], "grad"))
+                    for ind in range(len(slings[:4])):
+                        sling = slings[ind]
                         cv2.line(
                             orig_image,
                             (sling.p1.x, sling.p1.y),
                             (sling.p2.x, sling.p2.y),
                             (0, 255, 0),
-                            3,
+                            2,
+                        )
+                        cv2.putText(
+                            orig_image,
+                            str(ind + 1),
+                            (
+                                (sling.p1.x - 5, sling.p1.y + 5)
+                                if sling.p1.y > sling.p2.y
+                                else (sling.p2.x - 5, sling.p2.y + 5)
+                            ),
+                            cv2.FONT_HERSHEY_DUPLEX,
+                            0.8,
+                            (0, 0, 255),
+                            1,
+                            lineType=cv2.LINE_AA,
                         )
                     add_text_to_image(
                         orig_image,
