@@ -78,3 +78,19 @@ def angles(lines, type="rad"):
             elif type == "grad":
                 res[j][i] = np.mod(180.0 - res[i][j], 180)
     return res
+
+
+def find_angle(dots):
+    if dots[0][1] > dots[1][0]:
+        line_1 = np.array([dots[0], dots[1]])
+    else:
+        line_1 = np.array([dots[1], dots[0]])
+
+    if dots[2][1] > dots[3][0]:
+        line_2 = np.array([dots[2], dots[3]])
+    else:
+        line_2 = np.array([dots[3], dots[2]])
+
+    vector_1 = line_1[0]-line_1[1]
+    vector_2 = line_2[0]-line_2[1]
+    return np.arccos(np.dot(vector_1, vector_2)/np.linalg.norm(vector_1)/np.linalg.norm(vector_2))
