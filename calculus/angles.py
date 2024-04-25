@@ -72,25 +72,37 @@ def angles(lines, type="rad"):
                 continue
             line1 = lines[i]
             line2 = lines[j]
-            ang = line1.angle(line2, type)
-
-            if ang < ((np.pi / 2) if type == "rad" else 90):
-                res[i][j] = (
-                    (np.mod(ang + 2 * np.pi, 2 * np.pi))
-                    if type == "rad"
-                    else np.mod(ang + 360, 2 * 180)
-                )  # ang
-            else:
-                res[i][j] = (
-                    (np.mod((np.pi - ang) + 2 * np.pi, 2 * np.pi))
-                    if type == "rad"
-                    else np.mod((180 - ang) + 360, 2 * 180)
-                )
-                # res[i][j] = np.pi - ang
-            if type == "rad":
-                res[j][i] = np.pi - res[i][j]
-            elif type == "grad":
-                res[j][i] = 180.0 - res[i][j]
+            ang = intersection_point_and_angle(
+                [
+                    line1.p1.x,
+                    line1.p1.y,
+                    line1.p2.x,
+                    line1.p2.y,
+                    line2.p1.x,
+                    line2.p1.y,
+                    line2.p2.x,
+                    line2.p2.y,
+                ]
+            )
+            res[i][j] = ang
+            res[j][i] = 180 - ang
+            # if ang < ((np.pi / 2) if type == "rad" else 90):
+            #     res[i][j] = (
+            #         (np.mod(ang + 2 * np.pi, 2 * np.pi))
+            #         if type == "rad"
+            #         else np.mod(ang + 360, 2 * 180)
+            #     )  # ang
+            # else:
+            #     res[i][j] = (
+            #         (np.mod((np.pi - ang) + 2 * np.pi, 2 * np.pi))
+            #         if type == "rad"
+            #         else np.mod((180 - ang) + 360, 2 * 180)
+            #     )
+            # res[i][j] = np.pi - ang
+            # if type == "rad":
+            #     res[j][i] = np.pi - res[i][j]
+            # elif type == "grad":
+            #     res[j][i] = 180.0 - res[i][j]
     # print(res)
     return res
 
@@ -106,6 +118,48 @@ def find_angle(dots):
     else:
         line_2 = np.array([dots[3], dots[2]])
 
-    vector_1 = line_1[0]-line_1[1]
-    vector_2 = line_2[0]-line_2[1]
-    return np.arccos(np.dot(vector_1, vector_2)/np.linalg.norm(vector_1)/np.linalg.norm(vector_2))
+    vector_1 = line_1[0] - line_1[1]
+    vector_2 = line_2[0] - line_2[1]
+    return np.arccos(
+        np.dot(vector_1, vector_2) / np.linalg.norm(vector_1) / np.linalg.norm(vector_2)
+    )
+
+
+def intersection_point_and_angle(points):
+    # Проверяем, что переданы 8 координат точек
+    if len(points) != 8:
+        raise ValueError("Должно быть передано 8 координат точек")
+
+    # Разбиваем точки на координаты X и Y для каждой прямой
+    x1, y1, x2, y2, x3, y3, x4, y4 = points
+
+    # Вычисляем уравнения прямых через две точки для каждой прямой
+    a1 = y2 - y1
+    b1 = x1 - x2
+    c1 = x1 * (y1 - y2) - y1 * (x1 - x2)
+
+    a2 = y4 - y3
+    b2 = x3 - x4
+    c2 = x3 * (y3 - y4) - y3 * (x3 - x4)
+
+    # Находим точку пересечения прямых
+    determinant = a1 * b2 - a2 * b1
+    if determinant == 0:
+        raise ValueError("Прямые параллельны, нет точки пересечения")
+    else:
+        x_intersect = (b1 * c2 - b2 * c1) / determinant
+        y_intersect = (a2 * c1 - a1 * c2) / determinant
+
+    # Находим нижнюю точку на каждой прямой
+    lower_point1 = (x1, y1) if y1 > y2 else (x2, y2)
+    lower_point2 = (x3, y3) if y3 > y4 else (x4, y4)
+
+    # Вычисляем угол между двумя нижними точками и точкой пересечения
+    vector1 = np.array(lower_point1) - np.array([x_intersect, y_intersect])
+    vector2 = np.array(lower_point2) - np.array([x_intersect, y_intersect])
+    angle_rad = np.arccos(
+        np.dot(vector1, vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2))
+    )
+    angle_deg = np.degrees(angle_rad)
+
+    return angle_deg

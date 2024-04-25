@@ -8,7 +8,7 @@ import glob as glob
 from our_nn.model import create_model
 import matplotlib.pyplot as plt
 import time
-from calculus.angles import Line, angles
+from calculus.angles import Line, angles, find_angle
 from cv_module.line_detection import sling_diagonal_definition_from_file
 
 
