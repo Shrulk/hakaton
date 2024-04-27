@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import torch
 from calculus.angles import Line, angles, find_angle
-from cv_module.line_detection import sling_diagonal_definition_from_file
+from cv_module.line_detection import sling_least_square_definition_from_file
 from printing.printings import add_text_to_image, gen_table
 
 
@@ -82,16 +82,13 @@ def process_video(model, file_name, detection_threshold, classes, output_fname):
                             lineType=cv2.LINE_AA,
                         )
                     elif pred_classes[j] == "sling" and need_calcs:
-                        main_diag_flag = sling_diagonal_definition_from_file(
+                        points = sling_least_square_definition_from_file(
                             orig_image,
                             [int(box[0]), int(box[1]), int(box[2]), int(box[3])],
                         )
-                        if main_diag_flag:
-                            p1 = (int(box[0]), int(box[1]))
-                            p2 = (int(box[2]), int(box[3]))
-                        else:
-                            p1 = (int(box[2]), int(box[1]))
-                            p2 = (int(box[0]), int(box[3]))
+                        p1 = points[0]
+                        p2 = points[1]
+
                         slings.append(Line(p1[0], p1[1], p2[0], p2[1]))
                         table = gen_table(angles(slings[:4], "grad"))
                     for ind in range(len(slings[:4])):

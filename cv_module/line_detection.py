@@ -106,3 +106,38 @@ def sling_diagonal_definition_from_file(
     image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     angle = sling_diagonal_definition(image=image, gap=gap)
     return angle
+
+
+#  МНК
+
+def least_squares_line_definition(image: typing.Union[np.ndarray, list], zero_point: typing.Tuple[int,int],
+                                  *args, **kwargs) -> typing.Tuple[list, list]:
+    image_shape = np.shape(image)
+    x, y = np.where(image!=0)
+    x += zero_point[0]
+    y += zero_point[1]
+    A = np.vstack([x, np.ones(len(x))]).T
+    m, c = np.linalg.lstsq(A, y, rcond=None)[0]
+    return [x[0], m*x[0]+c], [x[-1], m*x[-1]+c]
+
+
+def sling_least_square_definition(image: typing.Union[np.ndarray, list],
+                                  zero_point: typing.Tuple[int,int],
+                                  *args, **kwargs):
+    temp_image = cv.bilateralFilter(image, 25, 15, 50)
+    image_edges = cv.Canny(temp_image, 240, 250, None, 3)
+    points = least_squares_line_definition(image_edges, zero_point, *args, **kwargs)
+    return angle
+
+
+def sling_least_square_definition_from_file(
+    image: np.ndarray, box_coordinates: list, *args, **kwargs
+) -> typing.Tuple[list, list]:
+    image = cut_frames.cut_image(image=image, box_coords=box_coordinates)
+    image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    if box_coordinates[0] < box_coordinates[2]:
+        zero_point = [box_coordinates[0], box_coordinates[1]]
+    else:
+        zero_point = [box_coordinates[2], box_coordinates[3]]
+    angle = sling_least_square_definition(image=image, zero_point=zero_point)
+    return angle
